@@ -21,7 +21,7 @@ while True:
     prompt = input("hey bob what do u wanna do\n[1] deposit\n[2] withdraw\n[3] check balance\n")
 
     if prompt =="1":
-        temp = deposit(account_balance, input("how much would you like to deposit?\n"))
+        temp = deposit(account_balance, input("enter deposit amount\n"))
         if not "fail" in temp:
             account_balance=temp
             print("Transaction successful. Balance updated to $"+str(account_balance))
@@ -29,7 +29,7 @@ while True:
             print("Transaction failed")
 
     elif prompt=="2":
-        temp = withdraw(account_balance, input("how much would you like to withdraw?\n"))
+        temp = withdraw(account_balance, input("enter withdrawal amount\n"))
         if not "fail" in temp:
             account_balance=temp
             print("Transaction successful. Balance updated to $"+str(account_balance))
