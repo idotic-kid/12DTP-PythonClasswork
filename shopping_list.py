@@ -13,7 +13,6 @@ def validate_str_to_float(question):
 def add_item(list):
     price_float = 69420
     item = input("What item would you like to add?\n> ").lower()
-    question_marks = "?"
     if item in list:
         return "n/a"
     else:
