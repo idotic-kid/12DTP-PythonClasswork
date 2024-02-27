@@ -17,7 +17,8 @@ def add_item(list, mod):
     # operation_real is set to this so that the value can be changed later
 
     # Creates a temporary list variable with the uncommited modifications
-    # Is always set to the original shopping list but ig if you wanted to have multiple shopping lists lol
+    # Is always set to the original shopping list but ig if you wanted to have 
+    # multiple shopping lists lol
 
     templist = list
     
