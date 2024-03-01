@@ -8,11 +8,14 @@ def validate_float_input(question):
         try:
             i = float(i_str)
         except:
-            msgbox("I meant like a NUMBER", "Shopping List/you BIG IDIOT!")
-            question_marks = question_marks+"?"
+            if i_str != None:
+                msgbox("I meant like a NUMBER", "Shopping List/you BIG IDIOT!")
+                question_marks = question_marks+"?"
+            else:
+                msgbox("no cancelling😡", "Shopping List/possible misclick!?")
     return i
 
-def add_item(list, mod):
+def add_item(the_list, mod):
 
     # "mod" is a parameter that stores the menu output, being
 #("Add item", "Remove item", "Change price of item", "Change quantity of item")
@@ -22,35 +25,52 @@ def add_item(list, mod):
     # Is always set to the original shopping list but ig if you wanted to have 
     # multiple shopping lists lol
 
-    templist = list
-    try:
-        new_item = enterbox("Enter the name of this item",
-        "Shopping List/Entering new item").lower()
-    except:
-        msgbox("Oh okay then 😔", "Shopping List/possible misclick!?")
-        return list
+    templist = the_list
 
 
     if mod =="Add item":
-        if new_item in list: #fail
+
+
+        try:
+            new_item = enterbox("Enter the name of this item",
+            "Shopping List/Entering new item").lower()
+        except:
+            msgbox("Oh okay then 😔", "Shopping List/possible misclick!?")
+            return the_list
+
+
+        if new_item in the_list: #fail
             msgbox("You already have this item in your shopping list!",
             "Shopping List/big dementia")
         else: #Succeed
             templist[new_item] = {"price":validate_float_input("How much does it cost (each)"),"quantity":validate_float_input("How much of this item do you want to add")}
     
     else:
-        if new_item not in list:
+
+        if len(the_list) >= 2:
+            new_item = choicebox(f"Which item do you want to {mod}?",
+        "Shopping List/editing the thing", list(the_list.keys()))
+        else:
+            new_item = list(the_list.keys())[0]
+            a = buttonbox(f"Youve selected {new_item} cuz thats the only item",
+            "Shopping List/youre so poor",("damn okay", "no what lemme leave"))
+            if a == "no what lemme leave":
+                msgbox("damn okay then :+1:", "Shopping List/ escape")
+                return the_list
+
+
+        if new_item not in the_list:
             msgbox("You don't HAVE that item in your shopping list!",
             "Shopping List/big dementia 2")
         else:
             if mod=="Remove item":
-                deleted_item = templist.pop()
-                msgbox(f"Successfully removed {deleted_item}!",
+                templist.pop(new_item)
+                msgbox(f"Successfully removed {new_item}!",
                 "Shopping List/killing vegetables")
 
             elif mod =="Change price of item":
                 old_price = templist[new_item]["price"]
-                templist[new_item]["price"] = validate_float_input("Enter the NEW price of the item!")
+                templist[new_item]["price"] = validate_float_input("Enter the NEW price of the item (each)!")
                 msgbox("Successfully changed the price of {} from {} to {}!".format(new_item, old_price, templist[new_item]["price"]))
 
             elif mod=="Change quantity of item":
@@ -86,11 +106,12 @@ def display_list(list, isrange):
         for i in list:
             if isrange:
                 if list[i]["price"] > minimum_price and list[i]["price"] < maximum_price:
-                    shopping_list_string = shopping_list_string + (" - {}x {}: ${}".format(list[i]["quantity"], i, list[i]["price"]))
+                    shopping_list_string = shopping_list_string + (" - {}x {}: ${} each".format(list[i]["quantity"], i, list[i]["price"]))
             else:
-                shopping_list_string = shopping_list_string + ("\n - {}x {}: ${}".format(list[i]["quantity"], i, list[i]["price"]))
+                shopping_list_string = shopping_list_string + ("\n - {}x {}: ${} each".format(list[i]["quantity"], i, list[i]["price"]))
     else:
-        print("There are no items in your shopping list.")
+        shopping_list_string = shopping_list_string + "\n There are no items \
+in your shopping list."
     
     msgbox(shopping_list_string, "Shopping List/View List")
 
@@ -105,7 +126,10 @@ while True:
     
     if menu_option == "Edit your shopping list": # Path for writing to list
         while menu_option !="5":
-            menu_option = buttonbox("How would you like to edit your shopping list?", "Shopping List/Edit", ("Add item", "Remove item", "Change price of item", "Change quantity of item", "Go back"))
+            menu_option = buttonbox("How would you like to edit your shopping \
+                list?", "Shopping List/Edit",
+                ("Add item", "Remove item", "Change price of item",
+                "Change quantity of item", "Go back"))
             
             if menu_option != None and menu_option != "Go back":
                 add_item(shopping_list, menu_option)
@@ -119,4 +143,4 @@ while True:
 
 
     else:
-        msgbox("You can't do that. =)", "Shopping List/Tried to escape")
+        msgbox("You can't do that.", "Shopping List/Tried to escape")
