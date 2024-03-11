@@ -18,14 +18,23 @@ def validate_24h_time():
 
     pass
 
+def validate_bookings(messsg):
+    return integerbox(msg=messsg, lowerbound=0, upperbound=150)
+
 def edit_single_movie(dictionary_of_movies, movie, option):
     input_function = {"genre":enterbox, "duration":integerbox,
-    "showtime":validate_24h_time, "bookings":integerbox}
+    "showtime":validate_24h_time, "bookings":validate_bookings}
     temp = dictionary_of_movies
     
-    temp[movie][option] = input_function[option](f"Enter your new {option}!")
-    msgbox(f"old list is {dictionary_of_movies} new list is{temp}")
-    return temp
+    temp2 = input_function[option](f"Enter your new {option}!")
+    if temp2!=None:
+        temp[movie][option] = temp2
+        msgbox("Successfully changed something but i forgot what it was")
+        return temp
+    else:
+        msgbox("Oh okay thats fine as well :c")
+        return temp
+    
 
 
 def add_movie(dictionary_of_movies):
@@ -63,22 +72,25 @@ def search(dictionary_of_movies):
 
 def edit_showtime(dictionary_of_movies):
     chosen_movie = choose_movie(dictionary_of_movies)
-    edit_single_movie(dictionary_of_movies, chosen_movie, "showtime")
-    pass
+    return edit_single_movie(dictionary_of_movies, chosen_movie, "showtime")
 
 def edit_bookings(dictionary_of_movies):
     chosen_movie = choose_movie(dictionary_of_movies)
-    edit_single_movie(dictionary_of_movies, chosen_movie, "bookings")
-
-    pass
+    if chosen_movie !=None:
+        return edit_single_movie(dictionary_of_movies, chosen_movie,"bookings")
+    else:
+        return dictionary_of_movies
 
 def display_dictionary(dictionary_of_movies):
-    dictionary_string = "Currently Showing"
-    for i in list(dictionary_of_movies.keys()):
-        dictionary_string = f"{dictionary_string}\n {i}: "
-        for a in dictionary_of_movies[i]:
-            dictionary_string = f"{dictionary_string} {a} "
-    msgbox(dictionary_string)
+    '''shows a mesagebo xwith  movies and its   informaiton!!'''
+
+    dictionary_str = "Currently Showing - - - - -"
+    for movie_name in list(dictionary_of_movies.keys()):
+        dictionary_str = f"- {dictionary_str}\n {movie_name}: "
+        for detail in list(dictionary_of_movies[movie_name].keys()):
+            dictionary_str = f"{dictionary_str}\n\t- {detail.capitalize()}:\
+ {dictionary_of_movies[movie_name][detail]} "
+    msgbox(dictionary_str)
     return dictionary_of_movies
 
 
