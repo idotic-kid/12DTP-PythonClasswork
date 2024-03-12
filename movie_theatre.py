@@ -13,26 +13,32 @@ movies = {
 def choose_movie(dictionary_of_movies):
     return choicebox("What movie do u want","choose a movie",
     list(dictionary_of_movies.keys()))
+
     
-def validate_24h_time(messgga):
+def input_24h_time(messgga):
     isvalid = False
     while not isvalid:
         answe = enterbox(messgga)
-        if answe!=None and len(answe.replace(":","")) == 4 and answe[2] ==":":
+        time_len = len(answe.replace(":",""))
+        if answe and time_len == 4 and answe[2] == ":":
             try:
                 answe2 = int(answe.replace(":",""))
                 isvalid = True
                 answe2 = str(answe2)[:2]+":"+str(answe2)[2:]
             except:
                 msgbox("noo u did it bad")
+        elif answe == None:
+            return None
     return answe2
+
 
 def validate_bookings(messsg):
     return integerbox(msg=messsg, lowerbound=0, upperbound=150)
 
+
 def edit_single_movie(dictionary_of_movies, movie, option):
     input_function = {"genre":enterbox, "duration":integerbox,
-    "showtime":validate_24h_time, "bookings":validate_bookings}
+    "showtime":input_24h_time, "bookings":validate_bookings}
     temp = dictionary_of_movies
     
     temp2 = input_function[option](f"Enter your new {option}!")
@@ -72,9 +78,11 @@ def add_movie(dictionary_of_movies):
         movie_detial_lost = ["genre", "duration", "showtime", "bookings"]
         temp_dcik = dictionary_of_movies
         temp_dcik[chosen_movie] = {}
+
         for i in movie_detial_lost:
             older_temp_dci = temp_dcik
             temp_dcik = edit_single_movie(dictionary_of_movies, chosen_movie,i)
+
             if temp_dcik == older_temp_dci:
                 msgbox("thing is cancelled!!!!")
                 return dictionary_of_movies
@@ -82,14 +90,16 @@ def add_movie(dictionary_of_movies):
         return temp_dcik
 
 
-
 def search(dictionary_of_movies):
     chosen_movie = choose_movie(dictionary_of_movies)
     message_string = chosen_movie + "\n"
+
     for i in dictionary_of_movies[chosen_movie]:
         message_string = f"{message_string}\n\t - {i.capitalize()}: {dictionary_of_movies[chosen_movie][i]}"
+
     msgbox(message_string)
     return dictionary_of_movies
+
 
 def edit_showtime(dictionary_of_movies):
     chosen_movie = choose_movie(dictionary_of_movies)
@@ -98,12 +108,14 @@ def edit_showtime(dictionary_of_movies):
     else:
         return dictionary_of_movies
 
+
 def edit_bookings(dictionary_of_movies):
     chosen_movie = choose_movie(dictionary_of_movies)
     if chosen_movie !=None:
         return edit_single_movie(dictionary_of_movies, chosen_movie,"bookings")
     else:
         return dictionary_of_movies
+
 
 def display_dictionary(dictionary_of_movies):
     '''shows a mesagebo xwith  movies and its   informaiton!!'''
@@ -120,16 +132,19 @@ def display_dictionary(dictionary_of_movies):
 
 while True:
     options = {
-    "Add a new movie":add_movie,
-    "Search for a movie":search,
-    "Reschedule a showtime":edit_showtime,
-    "Change the number of bookings for the movie":edit_bookings,
-    "Show the list of movies showing right today":display_dictionary,
-    "Exit":exit
+    "Add new movie":add_movie,
+    "Search movie":search,
+    "Reschedule showtime":edit_showtime,
+    "Edit Bookings":edit_bookings,
+    "Showing Today":display_dictionary,
+    "Exit":None
     }
 
     menu_option = buttonbox("What would you like to do?",
     "Main Menu", list(options.keys()))
-
-    movies = options[menu_option](movies)
+    if menu_option:
+        movies = options[menu_option](movies)
+    else:
+        msgbox("okay byebye thanks for using MOVIE THEATER DOT PY")
+        exit()
     
