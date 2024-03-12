@@ -18,13 +18,13 @@ def choose_movie(dictionary_of_movies):
 def input_24h_time(messgga):
     isvalid = False
     while not isvalid:
-        answe = enterbox(messgga)
-        time_len = len(answe.replace(":",""))
-        if answe and time_len == 4 and answe[2] == ":":
+        answe = enterbox(messgga, default="00:00")
+        colon_yes = answe[2] == ":"
+        if answe and len(answe.replace(":","")) == 4 and colon_yes:
             try:
                 answe2 = int(answe.replace(":",""))
                 isvalid = True
-                answe2 = str(answe2)[:2]+":"+str(answe2)[2:]
+                answe2 = answe
             except:
                 msgbox("noo u did it bad")
         elif answe == None:
@@ -32,13 +32,13 @@ def input_24h_time(messgga):
     return answe2
 
 
-def validate_bookings(messsg):
+def input_bookings(messsg):
     return integerbox(msg=messsg, lowerbound=0, upperbound=150)
 
 
 def edit_single_movie(dictionary_of_movies, movie, option):
     input_function = {"genre":enterbox, "duration":integerbox,
-    "showtime":input_24h_time, "bookings":validate_bookings}
+    "showtime":input_24h_time, "bookings":input_bookings}
     temp = dictionary_of_movies
     
     temp2 = input_function[option](f"Enter your new {option}!")
@@ -128,6 +128,28 @@ def display_dictionary(dictionary_of_movies):
  {dictionary_of_movies[movie_name][detail]} "
     msgbox(dictionary_str)
     return dictionary_of_movies
+
+
+def add_movie_BETTER_FUNCTION(dictionary_of_movies):
+    edited_dic_of_movies = dictionary_of_movies
+    chosen_movie = enterbox("What's the name of the movie you want to add?")
+
+    if chosen_movie in dictionary_of_movies:
+        msgbox("That movie is already in the list!")
+        extra_options = {"Reschedule its showtime":"showtime",
+    "Change the number of bookings for the movie":"bookings",
+    "Change the genre of the movie":"genre"}
+        
+        try: 
+            return edit_single_movie(dictionary_of_movies, chosen_movie,
+        extra_options[choicebox("Would you like to edit that movie instead?",
+        "redo", list(extra_options.keys()))])
+        except:
+            msgbox("Oh alright then that's fine as well")
+            return dictionary_of_movies
+
+
+    return edited_dic_of_movies
 
 
 while True:
