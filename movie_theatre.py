@@ -14,9 +14,18 @@ def choose_movie(dictionary_of_movies):
     return choicebox("What movie do u want","choose a movie",
     list(dictionary_of_movies.keys()))
     
-def validate_24h_time():
-
-    pass
+def validate_24h_time(messgga):
+    isvalid = False
+    while not isvalid:
+        answe = enterbox(messgga)
+        if answe!=None and len(answe.replace(":","")) == 4 and answe[2] ==":":
+            try:
+                answe2 = int(answe.replace(":",""))
+                isvalid = True
+                answe2 = str(answe2)[:2]+":"+str(answe2)[2:]
+            except:
+                msgbox("noo u did it bad")
+    return answe2
 
 def validate_bookings(messsg):
     return integerbox(msg=messsg, lowerbound=0, upperbound=150)
@@ -29,7 +38,7 @@ def edit_single_movie(dictionary_of_movies, movie, option):
     temp2 = input_function[option](f"Enter your new {option}!")
     if temp2!=None:
         temp[movie][option] = temp2
-        msgbox("Successfully changed something but i forgot what it was")
+        msgbox(f"made the {option} of {movie} to {temp2}")
         return temp
     else:
         msgbox("Oh okay thats fine as well :c")
@@ -60,19 +69,34 @@ def add_movie(dictionary_of_movies):
             return dictionary_of_movies
 
     else:
-        pass
-
-    pass
+        movie_detial_lost = ["genre", "duration", "showtime", "bookings"]
+        temp_dcik = dictionary_of_movies
+        temp_dcik[chosen_movie] = {}
+        for i in movie_detial_lost:
+            older_temp_dci = temp_dcik
+            temp_dcik = edit_single_movie(dictionary_of_movies, chosen_movie,i)
+            if temp_dcik == older_temp_dci:
+                msgbox("thing is cancelled!!!!")
+                return dictionary_of_movies
+        
+        return temp_dcik
 
 
 
 def search(dictionary_of_movies):
     chosen_movie = choose_movie(dictionary_of_movies)
-    pass
+    message_string = chosen_movie + "\n"
+    for i in dictionary_of_movies[chosen_movie]:
+        message_string = f"{message_string}\n\t - {i.capitalize()}: {dictionary_of_movies[chosen_movie][i]}"
+    msgbox(message_string)
+    return dictionary_of_movies
 
 def edit_showtime(dictionary_of_movies):
     chosen_movie = choose_movie(dictionary_of_movies)
-    return edit_single_movie(dictionary_of_movies, chosen_movie, "showtime")
+    if chosen_movie !=None:
+        return edit_single_movie(dictionary_of_movies, chosen_movie,"showtime")
+    else:
+        return dictionary_of_movies
 
 def edit_bookings(dictionary_of_movies):
     chosen_movie = choose_movie(dictionary_of_movies)
